@@ -1,41 +1,28 @@
 ﻿using System;
 using System.Collections;
 using System.Collections.Generic;
+using System.Diagnostics.Contracts;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 
 namespace MyList
 {
-    public class ProgramLaunch : IEnumerable
+    public class ProgramLaunch<T> : IEnumerable
     {
-        private string[] _date = { DateTime.Now.ToString(), "2 недели назад", "прошлым летом" };
+        private T[] _date = new T[0];
         public IEnumerator GetEnumerator()
         {
-            return new ProgramLaunchEnumerator(_date);
+            return new ProgramLaunchEnumerator<T>(_date);
         }
 
-        public void Add(string your)
+        public void Add1(T item)
         {
             Array.Resize(ref _date, _date.Length + 1);
-            if (your == null)
-            {
-                your = DateTime.UtcNow.ToString();
-            }
-            else
-            {
-                for (int i = 0; i < _date.Length; i++)
-                {
-                    if (_date[i] == null)
-                    {
-                        _date[i] = your;
-                        break;
-                    }
-                }
-            }
+            _date[_date.Length - 1] = item;
         }
 
-        public void AddRange(string[] your)
+        public void AddRange(T[] your)
         {
             if (your.Length == 0)
             {
@@ -51,48 +38,34 @@ namespace MyList
             }
         }
 
-        public void Remove(string your)
+        public void RemoveAt(int index)
         {
-            for (int i = 0; i < _date.Length; i++)
+            if (index < _date.Length)
             {
-                if (your == _date[i])
-                {
-                    _date[i] = "";
-                    Sort();
-                    Array.Reverse(_date);
-                    Array.Resize(ref _date, _date.Length - 1);
-                }
+                Array.Copy(_date, index + 1, _date, index, _date.Length - index - 1);
+                Array.Resize(ref _date, _date.Length - 1);
             }
         }
 
-        public void RemoveAt(int your)
+        public int IndexOf(T item)
         {
-            if (your >= 0 && your < _date.Length)
-            {
-                _date[your] = "";
-                Sort();
-                Array.Reverse(_date);
-                Array.Resize(ref _date, _date.Length - 1);
-            }
-            else
-            {
-                throw new NullReferenceException();
-            }
+            Contract.Ensures(Contract.Result<int>() >= -1);
+            Contract.Ensures(Contract.Result<int>() < _date.Length);
+            return Array.IndexOf(_date, item, 0, _date.Length);
         }
 
         public void Sort()
         {
+            Array.Sort(_date);
+        }
+
+        public void Remove(T your)
+        {
             for (int i = 0; i < _date.Length; i++)
             {
-                for (int k = i + 1; k < _date.Length; k++)
+                if (_date.Contains(your))
                 {
-                    if (_date[i].Length > _date[k].Length)
-                    {
-                        string str1 = " ";
-                        str1 = _date[i];
-                        _date[i] = _date[k];
-                        _date[k] = str1;
-                    }
+                    RemoveAt(IndexOf(your));
                 }
             }
         }

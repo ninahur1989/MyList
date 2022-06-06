@@ -7,16 +7,16 @@ using System.Threading.Tasks;
 
 namespace MyList
 {
-    public class ProgramLaunchEnumerator : IEnumerator<string>
+    public class ProgramLaunchEnumerator<T> : IEnumerator
     {
-        private string[] _date;
+        private T[] _date = new T[0];
         private int _position = -1;
-        public ProgramLaunchEnumerator(string[] dates)
+        public ProgramLaunchEnumerator(T[] date)
         {
-            _date = dates;
+            _date = date;
         }
 
-        public string Current
+        public T Current
         {
             get
             {

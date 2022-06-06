@@ -6,12 +6,13 @@ namespace MyList
     {
         public static void Main(string[] args)
         {
-            string[] b = { "32", " 7777", "323" };
-            ProgramLaunch programLaunch = new ProgramLaunch();
-            programLaunch.Add("сегодня");
+            string[] b = { "32", "7777", "323" };
+            ProgramLaunch<string> programLaunch = new ProgramLaunch<string>();
+            programLaunch.Add1("сегодня");
+            programLaunch.Add1("door");
             programLaunch.AddRange(b);
             programLaunch.Remove("32");
-            programLaunch.RemoveAt(1);
+            programLaunch.RemoveAt(2);
             programLaunch.Sort();
             foreach (var a in programLaunch)
             {
